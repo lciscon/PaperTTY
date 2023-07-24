@@ -289,7 +289,7 @@ class PaperTTY:
         draw.rectangle([upper_left, lower_right], fill=self.white)
         return ImageChops.logical_xor(image, mask)
 
-    def showfb(self, fb_num, rotate=None, invert=False, sleep=1, full_interval=100):
+    def showfb(self, fb_num, rotate=None, invert=False, mirror=False, sleep=1, full_interval=100):
         """Render the framebuffer - basically a copy-paste of showvnc at this point"""
         def _get_fb_info(fb_num):
             config_dir = "/sys/class/graphics/fb%d/" % fb_num
@@ -319,6 +319,8 @@ class PaperTTY:
             # apply invert
             if invert:
                 new_fb_img = ImageOps.invert(new_fb_img)
+            if mirror:
+                new_fb_image = ImageOps.mirror(new_fb_image)
             # rescale image if needed
             if new_fb_img.size != (self.driver.width, self.driver.height):
                 new_fb_img = new_fb_img.resize((self.driver.width, self.driver.height))
@@ -352,7 +354,7 @@ class PaperTTY:
 
 
 
-    def showvnc(self, host, display, password=None, rotate=None, invert=False, sleep=1, full_interval=100):
+    def showvnc(self, host, display, password=None, rotate=None, invert=False, mirror=False, sleep=1, full_interval=100):
         with api.connect(':'.join([host, display]), password=password) as client:
             previous_vnc_image = None
             diff_bbox = None
@@ -373,6 +375,8 @@ class PaperTTY:
                 # apply invert
                 if invert:
                     new_vnc_image = ImageOps.invert(new_vnc_image)
+                if mirror:
+                    new_vnc_image = ImageOps.mirror(new_vnc_image)
                 # rescale image if needed
                 if new_vnc_image.size != (self.driver.width, self.driver.height):
                     new_vnc_image = new_vnc_image.resize((self.driver.width, self.driver.height))
@@ -637,26 +641,28 @@ def image(settings, image_location, stretch, no_resize, fill_color, mirror, flip
 @click.option('--password', default=None, help="VNC password")
 @click.option('--rotate', default=None, help="Rotate screen (90 / 180 / 270)")
 @click.option('--invert', default=False, is_flag=True, help="Invert colors")
+@click.option('--mirror', default=False, is_flag=True, help="Mirror image")
 @click.option('--sleep', default=1, show_default=True, help="Refresh interval (s)", type=float)
 @click.option('--fullevery', default=50, show_default=True, help="# of partial updates between full updates")
 @click.pass_obj
-def vnc(settings, host, display, password, rotate, invert, sleep, fullevery):
+def vnc(settings, host, display, password, rotate, invert, mirror, sleep, fullevery):
     """Display a VNC desktop"""
     ptty = settings.get_init_tty()
-    ptty.showvnc(host, display, password, int(rotate) if rotate else None, invert, sleep, fullevery)
+    ptty.showvnc(host, display, password, int(rotate) if rotate else None, invert, mirror, sleep, fullevery)
 
 
 @click.command()
 @click.option('--fb-num', default="0", help="Framebuffer to display (/dev/fbX)", show_default=True)
 @click.option('--rotate', default=None, help="Rotate screen (90 / 180 / 270)")
 @click.option('--invert', default=False, is_flag=True, help="Invert colors")
+@click.option('--mirror', default=False, is_flag=True, help="Mirror image")
 @click.option('--sleep', default=1, show_default=True, help="Refresh interval (s)", type=float)
 @click.option('--fullevery', default=50, show_default=True, help="# of partial updates between full updates")
 @click.pass_obj
-def fb(settings, fb_num, rotate, invert, sleep, fullevery):
+def fb(settings, fb_num, rotate, invert, mirror, sleep, fullevery):
     """Display the framebuffer"""
     ptty = settings.get_init_tty()
-    ptty.showfb(int(fb_num), int(rotate) if rotate else None, invert, sleep, fullevery)
+    ptty.showfb(int(fb_num), int(rotate) if rotate else None, invert, mirror, sleep, fullevery)
 
 
 @click.command()
