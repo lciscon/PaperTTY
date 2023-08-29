@@ -295,14 +295,16 @@ class PaperTTY:
             config_dir = "/sys/class/graphics/fb%d/" % fb_num
             size = None
             bpp = None
-            with open(config_dir + "/virtual_size", "r") as f:
+            with open(config_dir + "virtual_size", "r") as f:
                 size = tuple([int(t) for t in f.read().strip().split(",")])
-            with open(config_dir + "/bits_per_pixel", "r") as f:
+            with open(config_dir + "bits_per_pixel", "r") as f:
                 bpp = int(f.read().strip())
             return (size,bpp)
 
         def _get_fb_img(fb_num):
             size, bpp = _get_fb_info(fb_num)
+            print ("size", size)
+            print ("bpp", bpp)
             with open("/dev/fb%d" % fb_num, "rb") as f:
                 mode = "BGRX" if bpp == 32 else "BGR;16"
                 return Image.frombytes("RGB", size, f.read(), "raw", mode).convert("L")
@@ -366,7 +368,7 @@ class PaperTTY:
                     client.refreshScreen()
                 except TimeoutError:
                     print("Timeout to server {}:{}".format(host, display))
-                    client.disconnect()
+                    client.disconnect()f
                     sys.exit(1)
                 new_vnc_image = client.screen
                 # apply rotation if any

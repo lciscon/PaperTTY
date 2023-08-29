@@ -20,9 +20,15 @@ class IT8951(DisplayDriver):
     This class will automatically infer the width and height by querying the
     controller."""
 
-    RST_PIN = 17
+    """RST_PIN = 17
     CS_PIN = 8
-    BUSY_PIN = 24
+    BUSY_PIN = 24"""
+
+    RST_PIN = 5 #18
+    CS_PIN = 24 #3
+    CS2_PIN = 23 #3
+    CS3_PIN = 17 #3
+    BUSY_PIN = 22 #2
 
     VCOM = 2000
 
@@ -178,6 +184,8 @@ class IT8951(DisplayDriver):
         GPIO.setwarnings(False)
         GPIO.setup(self.RST_PIN, GPIO.OUT)
         GPIO.setup(self.CS_PIN, GPIO.OUT)
+        GPIO.setup(self.CS2_PIN, GPIO.OUT)
+        GPIO.setup(self.CS3_PIN, GPIO.OUT)
         GPIO.setup(self.BUSY_PIN, GPIO.IN)
         self.SPI = spidev.SpiDev(0, 0)
         self.SPI.max_speed_hz = 2000000
@@ -191,6 +199,8 @@ class IT8951(DisplayDriver):
         self.SPI.no_cs = True
 
         GPIO.output(self.CS_PIN, GPIO.HIGH)
+        GPIO.output(self.CS2_PIN, GPIO.HIGH)
+        GPIO.output(self.CS3_PIN, GPIO.HIGH)
 
         # Reset the device to its initial state.
         GPIO.output(self.RST_PIN, GPIO.LOW)
