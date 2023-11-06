@@ -368,7 +368,7 @@ class PaperTTY:
                     client.refreshScreen()
                 except TimeoutError:
                     print("Timeout to server {}:{}".format(host, display))
-                    client.disconnect()f
+                    client.disconnect()
                     sys.exit(1)
                 new_vnc_image = client.screen
                 # apply rotation if any
