@@ -24,12 +24,6 @@ class IT8951(DisplayDriver):
     CS_PIN = 8
     BUSY_PIN = 24"""
 
-    """RST_PIN = 5 #18
-    CS_PIN = 24 #3
-    CS2_PIN = 23 #3
-    CS3_PIN = 17 #3
-    BUSY_PIN = 22 #2"""
-    
     RST_PIN = 17 
 
     CS1_PIN = 27
@@ -92,16 +86,17 @@ class IT8951(DisplayDriver):
         self.name = "IT8951"
         self.supports_partial = True
 
-    def select_screen(num):
-        if (num == 1):
-            CS_PIN = CS1_PIN            
-            BUSY_PIN = BUSY1_PIN
-        if (num == 2):
-            CS_PIN = CS2_PIN
-            BUSY_PIN = BUSY2_PIN
-        if (num == 3):
-            CS_PIN = CS2_PIN
-            BUSY_PIN = BUSY2_PIN
+    def select_screen(self, num):
+        print("Selecting screen ", num)
+        if (num == '1'):
+            self.CS_PIN = self.CS1_PIN            
+            self.BUSY_PIN = self.BUSY1_PIN
+        elif (num == '2'):
+            self.CS_PIN = self.CS2_PIN
+            self.BUSY_PIN = self.BUSY2_PIN
+        elif (num == '3'):
+            self.CS_PIN = self.CS3_PIN
+            self.BUSY_PIN = self.BUSY3_PIN
 
 
     def delay_ms(self, delaytime):
@@ -207,10 +202,12 @@ class IT8951(DisplayDriver):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         GPIO.setup(self.RST_PIN, GPIO.OUT)
-        GPIO.setup(self.CS_PIN, GPIO.OUT)
+        GPIO.setup(self.CS1_PIN, GPIO.OUT)
         GPIO.setup(self.CS2_PIN, GPIO.OUT)
         GPIO.setup(self.CS3_PIN, GPIO.OUT)
-        GPIO.setup(self.BUSY_PIN, GPIO.IN)
+        GPIO.setup(self.BUSY1_PIN, GPIO.IN)
+        GPIO.setup(self.BUSY2_PIN, GPIO.IN)
+        GPIO.setup(self.BUSY3_PIN, GPIO.IN)
         self.SPI = spidev.SpiDev(0, 0)
         self.SPI.max_speed_hz = 3900000
         self.SPI.mode = 0b00
