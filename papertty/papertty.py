@@ -363,6 +363,8 @@ class PaperTTY:
             # number of updates; when it's 0, do a full refresh
             updates = 0
             client.timeout = 30
+            self.driver.select_screen(display)
+
             while True:
                 try:
                     client.refreshScreen()

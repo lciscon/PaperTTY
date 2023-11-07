@@ -24,11 +24,23 @@ class IT8951(DisplayDriver):
     CS_PIN = 8
     BUSY_PIN = 24"""
 
-    RST_PIN = 5 #18
+    """RST_PIN = 5 #18
     CS_PIN = 24 #3
     CS2_PIN = 23 #3
     CS3_PIN = 17 #3
-    BUSY_PIN = 22 #2
+    BUSY_PIN = 22 #2"""
+    
+    RST_PIN = 17 
+
+    CS1_PIN = 27
+    CS2_PIN = 23
+    CS3_PIN = 24
+    BUSY1_PIN = 4
+    BUSY2_PIN = 0
+    BUSY3_PIN = 22
+
+    CS_PIN = CS3_PIN
+    BUSY_PIN = BUSY3_PIN
 
     VCOM = 2000
 
@@ -79,6 +91,18 @@ class IT8951(DisplayDriver):
         super().__init__()
         self.name = "IT8951"
         self.supports_partial = True
+
+    def select_screen(num):
+        if (num == 1):
+            CS_PIN = CS1_PIN            
+            BUSY_PIN = BUSY1_PIN
+        if (num == 2):
+            CS_PIN = CS2_PIN
+            BUSY_PIN = BUSY2_PIN
+        if (num == 3):
+            CS_PIN = CS2_PIN
+            BUSY_PIN = BUSY2_PIN
+
 
     def delay_ms(self, delaytime):
         time.sleep(float(delaytime) / 1000.0)
