@@ -36,6 +36,11 @@ PaperTTY is currently packaged using Poetry, however it can be installed via pip
 
 - `sudo apt-get install tightvncserver`
 
+### Install it directly
+
+cd ~/.Dev
+git clone https://github.com/lciscon/PaperTTY.git
+cd PaperTTY
 
 
 ### Install with pip to virtualenv
