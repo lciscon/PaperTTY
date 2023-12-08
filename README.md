@@ -43,6 +43,7 @@ If you just want it installed as packaged in PyPi (if you need to modify somethi
 ```bash
 python3 -m venv papertty_venv
 source papertty_venv/bin/activate
+pip install --upgrade pillow
 pip install git+https://github.com/lciscon/PaperTTY.git#egg=PaperTTY
 papertty_venv/bin/papertty --help
 ```
