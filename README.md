@@ -28,7 +28,15 @@ PaperTTY is currently packaged using Poetry, however it can be installed via pip
 
 **Then, you also need some system dependencies:**
 
+- `sudo apt-get update`
+  
 - `sudo apt install python3-venv python3-pip libopenjp2-7 libtiff5 libjpeg-dev`
+
+**Install TightVNC server:**
+
+- `sudo apt-get install tightvncserver`
+
+
 
 ### Install with pip to virtualenv
 
