@@ -33,10 +33,10 @@ class IT8951(DisplayDriver):
     BUSY2_PIN = 0
     BUSY3_PIN = 22
 
-    CS_PIN = CS3_PIN
-    BUSY_PIN = BUSY3_PIN
+    CS_PIN = CS2_PIN
+    BUSY_PIN = BUSY2_PIN
 
-    VCOM = 2000
+    VCOM = 2050
 
     CMD_GET_DEVICE_INFO = [0x03, 0x02]
     CMD_WRITE_REGISTER = [0x00, 0x11]
