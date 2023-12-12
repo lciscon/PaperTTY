@@ -65,6 +65,18 @@ poetry run papertty --help
 
 To get a direct path for the script (which will be run in the virtual environment with all the dependencies), run in the directory: `echo $(poetry env info -p)/bin/papertty`. Append any options you need and this is what you want to start in a SystemD unit or so, possibly with `sudo` depending on the OS configuration and the feature you wish to use.
 
+### Using with RealVNC
+
+To use PaperTTY With RealVNC you have to set it to use VNC Password you have to go into the RealVNC server options and set the following flags:
+
+Authentication: VNC password
+Encryption:  AlwaysOff
+Users & Permissions
+	Standard user (user)
+		Allow connections from legacy VNC Viewer users
+
+
+
 
 **The rest of this page has not been updated but is left as reference until a more holistic documentation update is actually done. If you have any issues, please search the existing issues and create a new one if necessary. joukos/2022-01-17**
 
