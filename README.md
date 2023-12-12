@@ -69,12 +69,12 @@ To get a direct path for the script (which will be run in the virtual environmen
 
 To use PaperTTY With RealVNC you have to set it to use VNC Password you have to go into the RealVNC server options and set the following flags:
 
-Authentication: VNC password
+```Authentication: VNC password
 Encryption:  AlwaysOff
 Users & Permissions
 	Standard user (user)
 		Allow connections from legacy VNC Viewer users
-
+```
 
 
 
