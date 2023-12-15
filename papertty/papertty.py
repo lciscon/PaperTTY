@@ -357,7 +357,11 @@ class PaperTTY:
 
 
     def showvnc(self, host, display, password=None, rotate=None, invert=False, mirror=False, sleep=1, full_interval=100):
-        with api.connect(':'.join([host, display]), password=password) as client:
+        if (display == 2)
+            vdisplay = 0
+        else
+            vdisplay = display
+        with api.connect(':'.join([host, vdisplay]), password=password) as client:
             previous_vnc_image = None
             diff_bbox = None
             # number of updates; when it's 0, do a full refresh
@@ -504,11 +508,12 @@ def get_driver_list():
     return '\n'.join(["{}{}".format(driver.ljust(15), order[driver]['desc']) for driver in order])
 
 
-def display_image(driver, image, stretch=False, no_resize=False, fill_color="white", rotate=None, mirror=None, flip=None):
+def display_image(driver, image, display, stretch=False, no_resize=False, fill_color="white", rotate=None, mirror=None, flip=None):
     """
     Display the given image using the given driver and options.
     :param driver: device driver (subclass of `WaveshareEPD`)
     :param image: image data to display
+    :param display: which display to show the image on
     :param stretch: whether to stretch the image so that it fills the screen in both dimentions
     :param no_resize: whether the image should not be resized if it does not fit the screen (will raise `RuntimeError`
     if image is too large)
@@ -520,6 +525,8 @@ def display_image(driver, image, stretch=False, no_resize=False, fill_color="whi
     """
     if stretch and no_resize:
         raise ValueError('Cannot set "no-resize" with "stretch"')
+
+    self.driver.select_screen(display)
 
     if mirror:
         image = ImageOps.mirror(image)
@@ -616,6 +623,7 @@ def stdin(settings, font, fontsize, width, portrait, nofold, spacing):
 
 @click.command()
 @click.option('--image', 'image_location', help='Location of image to display (omit for stdin)', show_default=True)
+@click.option('--display', default="1", help="Display to use (1-3)", show_default=True)
 @click.option('--stretch', default=False, is_flag=True, show_default=True,
               help='Stretch image so that it fills the entire screen (may distort your image!)')
 @click.option('--no-resize', default=False, is_flag=True, show_default=True,
@@ -625,7 +633,7 @@ def stdin(settings, font, fontsize, width, portrait, nofold, spacing):
 @click.option('--flip', default=False, is_flag=True, help='Mirror vertically', show_default=True)
 @click.option('--rotate', default=0, help='Rotate the image by N degrees', show_default=True, type=float)
 @click.pass_obj
-def image(settings, image_location, stretch, no_resize, fill_color, mirror, flip, rotate):
+def image(settings, image_location, display, stretch, no_resize, fill_color, mirror, flip, rotate):
     """ Display an image """
     if image_location is None or image_location == '-':
         # XXX: logging to stdout, in line with the rest of this project
@@ -636,12 +644,12 @@ def image(settings, image_location, stretch, no_resize, fill_color, mirror, flip
         image = Image.open(image_location)
 
     ptty = settings.get_init_tty()
-    display_image(ptty.driver, image, stretch=stretch, no_resize=no_resize, fill_color=fill_color, rotate=rotate, mirror=mirror, flip=flip)
+    display_image(ptty.driver, image, display, stretch=stretch, no_resize=no_resize, fill_color=fill_color, rotate=rotate, mirror=mirror, flip=flip)
 
 
 @click.command()
 @click.option('--host', default="localhost", help="VNC host to connect to", show_default=True)
-@click.option('--display', default="0", help="VNC display to use (0 = port 5900)", show_default=True)
+@click.option('--display', default="1", help="VNC display to use (0 = port 5900)", show_default=True)
 @click.option('--password', default=None, help="VNC password")
 @click.option('--rotate', default=None, help="Rotate screen (90 / 180 / 270)")
 @click.option('--invert', default=False, is_flag=True, help="Invert colors")
