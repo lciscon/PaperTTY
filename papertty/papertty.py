@@ -246,9 +246,9 @@ class PaperTTY:
             # characters seem to have the same height
             self.font_height = self.font.getsize('a')[1] + self.spacing
 
-    def init_display(self):
+    def init_display(self, display):
         """Initialize the display - call the driver's init method"""
-        self.driver.init(partial=self.partial)
+        self.driver.init(partial=self.partial, display=display)
         self.initialized = True
 
     def fit(self, portrait=False):
@@ -469,9 +469,9 @@ class Settings:
     def __init__(self, **kwargs):
         self.args = kwargs
 
-    def get_init_tty(self):
+    def get_init_tty(self, display):
         tty = PaperTTY(**self.args)
-        tty.init_display()
+        tty.init_display(display)
         return tty
 
 
@@ -525,8 +525,6 @@ def display_image(driver, image, display, stretch=False, no_resize=False, fill_c
     """
     if stretch and no_resize:
         raise ValueError('Cannot set "no-resize" with "stretch"')
-
-    driver.select_screen(display)
 
     if mirror:
         image = ImageOps.mirror(image)
@@ -591,7 +589,7 @@ def scrub(settings, size):
     """Slowly fill with black, then white"""
     if size not in range(8, 32 + 1):
         PaperTTY.error("Invalid stripe size, must be 8-32")
-    ptty = settings.get_init_tty()
+    ptty = settings.get_init_tty(1)
     ptty.driver.scrub(fillsize=size)
 
 
@@ -609,7 +607,7 @@ def stdin(settings, font, fontsize, width, portrait, nofold, spacing):
     settings.args['font'] = font
     settings.args['fontsize'] = fontsize
     settings.args['spacing'] = spacing
-    ptty = settings.get_init_tty()
+    ptty = settings.get_init_tty(1)
     text = sys.stdin.read()
     if not nofold:
         if width:
@@ -643,7 +641,7 @@ def image(settings, image_location, display, stretch, no_resize, fill_color, mir
     else:
         image = Image.open(image_location)
 
-    ptty = settings.get_init_tty()
+    ptty = settings.get_init_tty(display)
     display_image(ptty.driver, image, display, stretch=stretch, no_resize=no_resize, fill_color=fill_color, rotate=rotate, mirror=mirror, flip=flip)
 
 
@@ -659,7 +657,7 @@ def image(settings, image_location, display, stretch, no_resize, fill_color, mir
 @click.pass_obj
 def vnc(settings, host, display, password, rotate, invert, mirror, sleep, fullevery):
     """Display a VNC desktop"""
-    ptty = settings.get_init_tty()
+    ptty = settings.get_init_tty(display)
     ptty.showvnc(host, display, password, int(rotate) if rotate else None, invert, mirror, sleep, fullevery)
 
 
@@ -673,7 +671,7 @@ def vnc(settings, host, display, password, rotate, invert, mirror, sleep, fullev
 @click.pass_obj
 def fb(settings, fb_num, rotate, invert, mirror, sleep, fullevery):
     """Display the framebuffer"""
-    ptty = settings.get_init_tty()
+    ptty = settings.get_init_tty(1)
     ptty.showfb(int(fb_num), int(rotate) if rotate else None, invert, mirror, sleep, fullevery)
 
 
@@ -719,7 +717,7 @@ def terminal(settings, vcsa, font, fontsize, noclear, nocursor, cursor, sleep, t
     else:
         settings.args['cursor'] = cursor
 
-    ptty = settings.get_init_tty()
+    ptty = settings.get_init_tty(1)
 
     if apply_scrub:
         ptty.driver.scrub()

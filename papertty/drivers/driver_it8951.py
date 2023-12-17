@@ -219,6 +219,10 @@ class IT8951(DisplayDriver):
         # [1] https://github.com/waveshare/IT8951
         self.SPI.no_cs = True
 
+        display = kwargs['display']
+        if (display):
+            self.select_screen(display)
+        
         GPIO.output(self.CS_PIN, GPIO.HIGH)
         GPIO.output(self.CS2_PIN, GPIO.HIGH)
         GPIO.output(self.CS3_PIN, GPIO.HIGH)
