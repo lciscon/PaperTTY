@@ -357,8 +357,8 @@ class PaperTTY:
 
 
     def showvnc(self, host, display, password=None, rotate=None, invert=False, mirror=False, sleep=1, full_interval=100):
-        if (display == 2):
-            vdisplay = 0
+        if (display == '2'):
+            vdisplay = '0'
         else:
             vdisplay = display
         with api.connect(':'.join([host, vdisplay]), password=password) as client:
