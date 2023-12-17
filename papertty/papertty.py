@@ -357,9 +357,9 @@ class PaperTTY:
 
 
     def showvnc(self, host, display, password=None, rotate=None, invert=False, mirror=False, sleep=1, full_interval=100):
-        if (display == 2)
+        if (display == 2):
             vdisplay = 0
-        else
+        else:
             vdisplay = display
         with api.connect(':'.join([host, vdisplay]), password=password) as client:
             previous_vnc_image = None
@@ -526,7 +526,7 @@ def display_image(driver, image, display, stretch=False, no_resize=False, fill_c
     if stretch and no_resize:
         raise ValueError('Cannot set "no-resize" with "stretch"')
 
-    self.driver.select_screen(display)
+    driver.select_screen(display)
 
     if mirror:
         image = ImageOps.mirror(image)
