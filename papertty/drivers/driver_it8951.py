@@ -209,7 +209,7 @@ class IT8951(DisplayDriver):
         GPIO.setup(self.BUSY2_PIN, GPIO.IN)
         GPIO.setup(self.BUSY3_PIN, GPIO.IN)
         self.SPI = spidev.SpiDev(0, 0)
-        self.SPI.max_speed_hz = 3900000
+        self.SPI.max_speed_hz = 2900000 # 3900000
         self.SPI.mode = 0b00
 
         # It is unclear why this is necessary but it appears to be. The sample
